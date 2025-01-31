@@ -1,6 +1,6 @@
 # Simple Roullete Wheel
 
-## Introduction Phase(0)
+## Introduction Phase
 
 For my CPSC 210 project this term, I plan to create a **simple roulette wheel** application. The user will be prompted to choose either a number between **0 and 36** or a **color (red and black)**, then enter how much they want to bet. Each number will be assigned a color green, red, or black. Once the user makes their selection, a randomized ball will spin and land on a number. If the ball lands on the chosen number or choosen color, the user wins a prize, and **the prize amount will depend on the number or color they selected**.
 
