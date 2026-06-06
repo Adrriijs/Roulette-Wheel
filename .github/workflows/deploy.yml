@@ -1,0 +1,63 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Compile Java sources
+        run: |
+          mkdir -p out
+          find src/main -name "*.java" | xargs javac -cp "lib/json-20240303.jar" -d out
+
+      - name: Package uber JAR
+        run: |
+          mkdir -p jar-staging site
+          cp -r out/. jar-staging/
+          cp -r src/main/ui/Images jar-staging/ui/
+          cd jar-staging && jar xf ../lib/json-20240303.jar && rm -rf META-INF && cd ..
+          printf "Main-Class: ui.SimpleRouletteWheelUI\n\n" > manifest.mf
+          jar cfm site/roulette.jar manifest.mf -C jar-staging .
+
+      - name: Copy site files
+        run: cp docs/index.html site/
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
