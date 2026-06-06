@@ -30,6 +30,53 @@ I'm excited to work on this roulette game project because it has several compone
 - You can access **MENU** button to save the progress you made.
 - You can access **MENU** button to load the progress you made before.
 
+## How to Try It
+
+### Requirements
+- **Java 11 or higher** — download from [adoptium.net](https://adoptium.net) and install it (choose the **Temurin JDK 11** installer for your OS)
+
+### Steps
+
+1. **Clone or download this repository**
+   ```
+   git clone https://github.com/Adrriijs/Roulette-Wheel.git
+   ```
+   Or click the green **Code** button on GitHub → **Download ZIP**, then unzip it.
+
+2. **Open a terminal** and navigate into the project folder:
+   ```
+   cd Roulette-Wheel
+   ```
+
+3. **Compile the source files:**
+   ```
+   javac -cp lib/json-20240303.jar -d bin $(find src/main -name "*.java")
+   ```
+   On Windows (Command Prompt), replace the last part with:
+   ```
+   for /r src\main %f in (*.java) do javac -cp lib\json-20240303.jar -d bin "%f"
+   ```
+
+4. **Copy the image assets into the output folder:**
+   ```
+   cp -r src/main/ui/Images bin/ui/
+   ```
+   On Windows:
+   ```
+   xcopy src\main\ui\Images bin\ui\Images\ /E /I
+   ```
+
+5. **Run the game:**
+   ```
+   java -cp "bin:lib/json-20240303.jar" ui.SimpleRouletteWheelUI
+   ```
+   On Windows:
+   ```
+   java -cp "bin;lib\json-20240303.jar" ui.SimpleRouletteWheelUI
+   ```
+
+The game window will open and you start with **$10,000** to bet with. Good luck!
+
 ## Reference
 - Using WorkRoomApp.java as the reference for data persistence
 - Using Runnable from java standard library for notifying main UI
