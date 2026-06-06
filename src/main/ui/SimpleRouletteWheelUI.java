@@ -102,6 +102,8 @@ public class SimpleRouletteWheelUI extends JFrame implements ActionListener {
         rollButton.setBounds(400, 300, 180, 80);
         rollButton.setBackground(Color.GREEN);
         rollButton.setForeground(Color.WHITE);
+        rollButton.setOpaque(true);
+        rollButton.setBorderPainted(false);
         rollButton.addActionListener(e -> handleRoll());
         resultPanel.add(rollButton);
     }
@@ -219,7 +221,8 @@ public class SimpleRouletteWheelUI extends JFrame implements ActionListener {
             } else {
                 button.setBackground(i % 2 == 0 ? Color.RED : Color.BLACK);
             }
-
+            button.setOpaque(true);
+            button.setBorderPainted(false);
             button.addActionListener(e -> handleBet(button.getText()));
             table.add(button);
         }
@@ -248,7 +251,8 @@ public class SimpleRouletteWheelUI extends JFrame implements ActionListener {
             }
 
             colorButton.setBackground(colorNeeded);
-
+            colorButton.setOpaque(true);
+            colorButton.setBorderPainted(false);
             colorButton.addActionListener(e -> handleBet(color));
             colorTable.add(colorButton);
         }
@@ -535,32 +539,34 @@ public class SimpleRouletteWheelUI extends JFrame implements ActionListener {
     public void showMenu(Backpack backpack, BankAccount bankAccount) {
         this.backpack = backpack;
         this.bankAccount = bankAccount;
-        setTitle("Menu");
-        setSize(400, 200);
-        setLayout(new BorderLayout());
 
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
 
-        // Create buttons
+        JDialog menuDialog = new JDialog(this, "Menu", true);
+        menuDialog.setSize(400, 150);
+        menuDialog.setLayout(new BorderLayout(10, 10));
+        menuDialog.setLocationRelativeTo(this);
+
         JButton loadButton = new JButton("Load Progress");
         JButton saveButton = new JButton("Save Progress");
 
-        // Add action listeners to buttons
-        loadButton.addActionListener(e -> handleLoadProgress());
-        saveButton.addActionListener(e -> handleSaveProgress());
+        loadButton.addActionListener(e -> {
+            menuDialog.dispose();
+            handleLoadProgress();
+        });
+        saveButton.addActionListener(e -> {
+            handleSaveProgress();
+            menuDialog.dispose();
+        });
 
-        // Add buttons to the center of the window in a panel
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 2, 10, 0)); // Horizontal layout
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(30, 20, 30, 20));
         buttonPanel.add(loadButton);
         buttonPanel.add(saveButton);
 
-        add(buttonPanel, BorderLayout.CENTER);
-
-        // Center the frame
-        setLocationRelativeTo(null);
-        setVisible(true);
+        menuDialog.add(buttonPanel, BorderLayout.CENTER);
+        menuDialog.setVisible(true);
     }
 
     /**
